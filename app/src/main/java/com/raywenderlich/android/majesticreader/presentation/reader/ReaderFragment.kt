@@ -42,7 +42,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.raywenderlich.android.majesticreader.R
-import com.raywenderlich.android.majesticreader.Document
+import com.raywenderlich.android.majesticreader.domain.Document
 import com.raywenderlich.android.majesticreader.framework.MajesticViewModelFactory
 import com.raywenderlich.android.majesticreader.presentation.IntentUtil
 import com.raywenderlich.android.majesticreader.presentation.library.LibraryFragment

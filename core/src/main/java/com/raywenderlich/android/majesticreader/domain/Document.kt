@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.majesticreader
+package com.raywenderlich.android.majesticreader.domain
 
 import java.io.Serializable
 

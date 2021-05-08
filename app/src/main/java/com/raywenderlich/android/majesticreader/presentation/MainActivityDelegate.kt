@@ -30,7 +30,7 @@
 
 package com.raywenderlich.android.majesticreader.presentation
 
-import com.raywenderlich.android.majesticreader.Document
+import com.raywenderlich.android.majesticreader.domain.Document
 
 interface MainActivityDelegate {
 

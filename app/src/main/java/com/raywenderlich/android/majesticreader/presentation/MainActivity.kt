@@ -38,7 +38,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.raywenderlich.android.majesticreader.Document
+import com.raywenderlich.android.majesticreader.domain.Document
 import com.raywenderlich.android.majesticreader.R
 import com.raywenderlich.android.majesticreader.presentation.library.LibraryFragment
 import com.raywenderlich.android.majesticreader.presentation.reader.ReaderFragment
