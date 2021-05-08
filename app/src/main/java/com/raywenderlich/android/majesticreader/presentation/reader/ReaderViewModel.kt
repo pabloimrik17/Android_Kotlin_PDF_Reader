@@ -43,6 +43,8 @@ import com.raywenderlich.android.majesticreader.domain.Bookmark
 import com.raywenderlich.android.majesticreader.domain.Document
 import com.raywenderlich.android.majesticreader.framework.Interactors
 import com.raywenderlich.android.majesticreader.framework.MajesticViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 class ReaderViewModel(application: Application, interactors: Interactors) : MajesticViewModel
@@ -59,7 +61,11 @@ class ReaderViewModel(application: Application, interactors: Interactors) : Maje
   val document = MutableLiveData<Document>()
 
   val bookmarks = MediatorLiveData<List<Bookmark>>().apply {
-    // TODO add sources
+    addSource(document) { document ->
+      GlobalScope.launch {
+        postValue(interactors.getBookmarks(document))
+      }
+    }
   }
 
   val currentPage = MediatorLiveData<PdfRenderer.Page>()
@@ -79,7 +85,9 @@ class ReaderViewModel(application: Application, interactors: Interactors) : Maje
   }
 
   val isInLibrary: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-    addSource(document) { value = isInLibrary(it) }
+    addSource(document) { document -> GlobalScope.launch {
+      postValue(isInLibrary(document))
+    } }
   }
 
   val renderer = MediatorLiveData<PdfRenderer>().apply {
@@ -98,19 +106,46 @@ class ReaderViewModel(application: Application, interactors: Interactors) : Maje
   private fun isCurrentPageBookmarked() =
       bookmarks.value?.any { it.page == currentPage.value?.index } == true
 
-  // TODO check if document is in library
-  private fun isInLibrary(document: Document) = false
+
+  private suspend fun isInLibrary(document: Document) = interactors.getDocuments().any { it.url == document.url }
 
   fun loadArguments(arguments: Bundle?) {
     if (arguments == null) {
       return
     }
 
-    // TODO load document from arguments and initialize
+    currentPage.apply {
+      addSource(renderer) { renderer ->
+        GlobalScope.launch {
+          val document = document.value
+
+          if (document != null) {
+            val bookmarks = interactors.getBookmarks(document).lastOrNull()?.page ?: 0
+
+            postValue(renderer.openPage(bookmarks))
+          }
+        }
+      }
+    }
+
+    val documentFromArguments = arguments.get(DOCUMENT_ARG) as Document? ?: Document.EMPTY
+
+    val lastOpenDocument = interactors.getOpenDocument()
+
+    document.value = when {
+      documentFromArguments != Document.EMPTY -> documentFromArguments
+      documentFromArguments == Document.EMPTY && lastOpenDocument !== Document.EMPTY -> lastOpenDocument
+      else -> Document.EMPTY
+    }
+
+    document.value?.let { interactors.setOpenDocument(it) }
+
+
   }
 
   fun openDocument(uri: Uri) {
-    // TODO open document
+    document.value = Document(uri.toString(), "", 0, "")
+    document.value?.let { interactors.setOpenDocument(it) }
   }
 
   fun openBookmark(bookmark: Bookmark) {
@@ -128,10 +163,32 @@ class ReaderViewModel(application: Application, interactors: Interactors) : Maje
   fun reopenPage() = openPage(currentPage.value?.index ?: 0)
 
   fun toggleBookmark() {
-    // TODO toggle bookmark on the current page
+    val currentPage = currentPage.value?.index ?: return
+    val document = document.value ?: return
+    val bookmark = bookmarks.value?.firstOrNull() { it.page == currentPage }
+
+    GlobalScope.launch {
+      if (bookmark == null) {
+        interactors.addBookmark(document, Bookmark(page = currentPage))
+      } else {
+        interactors.deleteBookmark(document, bookmark)
+      }
+
+      bookmarks.postValue(interactors.getBookmarks(document))
+    }
   }
 
   fun toggleInLibrary() {
-    // TODO toggle if open document is in library
+    val document = document.value ?: return
+
+    GlobalScope.launch {
+      if (isInLibrary.value == true) {
+        interactors.removeDocument(document)
+      } else {
+        interactors.addDocument(document)
+      }
+
+      isInLibrary.postValue(isInLibrary(document))
+    }
   }
 }
