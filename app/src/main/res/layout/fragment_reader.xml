@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Razeware LLC
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+  ~ distribute, sublicense, create a derivative work, and/or sell copies of the
+  ~ Software in any work that is designed, intended, or marketed for pedagogical or
+  ~ instructional purposes related to programming, coding, application development,
+  ~ or information technology.  Permission for such use, copying, modification,
+  ~ merger, publication, distribution, sublicensing, creation of derivative works,
+  ~ or sale is expressly withheld.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.raywenderlich.android.majesticreader.presentation.MainActivity">
+
+  <com.github.chrisbanes.photoview.PhotoView
+      android:id="@+id/iv_page"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      marginBottom="88dp"
+      android:visibility="invisible"/>
+
+  <LinearLayout
+      android:id="@+id/bottomSheet"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@android:color/background_light"
+      android:orientation="vertical"
+      app:behavior_hideable="false"
+      app:behavior_peekHeight="88dp"
+      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:orientation="horizontal">
+
+      <TextView
+          android:id="@+id/pagesTextView"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:paddingStart="@dimen/activity_horizontal_margin"
+          android:paddingEnd="@dimen/activity_horizontal_margin"
+          android:gravity="center_vertical"
+          android:background="@color/colorPrimaryDark"
+          android:textColor="@android:color/white"
+          tools:text="Page: 1 / 12"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_weight="0"
+          android:background="@color/colorPrimaryDark"
+          android:paddingStart="@dimen/activity_horizontal_margin"
+          android:paddingEnd="@dimen/activity_horizontal_margin"
+          android:gravity="center"
+          android:textColor="@android:color/white"
+          android:drawableEnd="@drawable/ic_arrow_up"
+          android:text="@string/bookmarks"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+      <TextView
+          android:id="@+id/tabBookmark"
+          style="@style/Widget.MajesticReader.Tab"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_weight="1"
+          android:drawableTop="@drawable/ic_bookmark"
+          android:icon="@drawable/ic_bookmark"
+          android:text="@string/bookmark" />
+
+      <TextView
+          android:id="@+id/tabLibrary"
+          style="@style/Widget.MajesticReader.Tab"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_weight="1"
+          android:drawableTop="@drawable/ic_library"
+          android:text="@string/menu_library"/>
+
+      <TextView
+          android:id="@+id/tabPreviousPage"
+          style="@style/Widget.MajesticReader.Tab"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_weight="1"
+          android:drawableTop="@drawable/ic_previous_page"
+          android:text="@string/previous" />
+
+      <TextView
+          android:id="@+id/tabNextPage"
+          style="@style/Widget.MajesticReader.Tab"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_weight="1"
+          android:drawableTop="@drawable/ic_next_page"
+          android:text="@string/next"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bookmarksRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_bookmark"/>
+
+  </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
